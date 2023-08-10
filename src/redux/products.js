@@ -19,9 +19,13 @@ export const productSlice = createSlice({
     changeSkip: (state, action) => {
       state.skip = action.payload;
     },
+    addSkip: (state, action) => {
+      state.skip = action.payload;
+    },
   },
 });
 
-export const { changeProducts, changeLimit, changeSkip } = productSlice.actions;
+export const { changeProducts, changeLimit, changeSkip, addSkip } =
+  productSlice.actions;
 
 export default productSlice.reducer;

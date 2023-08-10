@@ -1,7 +1,7 @@
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 import useApi from "@/hooks/useApi";
-import { changeProducts } from "@/redux/products";
+import { addSkip, changeProducts } from "@/redux/products";
 
 import Pagination from "./Pagination";
 
@@ -14,17 +14,33 @@ const Products = () => {
   const { data, isLoaded } = useApi(`products?limit=${limit}&skip=${skip}`);
   const dataCategories = useApi("products/categories");
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const totalPages = Math.ceil(100 / limit);
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage);
+  };
+
   useEffect(() => {
     if (data.products) {
       dispatch(changeProducts(data.products));
     }
   }, [data.products, dispatch]);
 
-  const [currentPage, setCurrentPage] = useState(1); // Change this to your initial active page
-  const totalPages = 100; // Replace with the actual total number of pages
-  const handlePageChange = (newPage) => {
-    setCurrentPage(newPage);
-  };
+  useEffect(() => {
+    /**
+     * in page 1 -> skip 0
+     * in page 2 -> skip 5
+     * in page 3 -> skip 10
+     */
+
+    let skipValue = 0;
+
+    if (currentPage > 1) {
+      skipValue = (currentPage - 1) * 5;
+    }
+
+    dispatch(addSkip(skipValue));
+  }, [currentPage]);
 
   return (
     <>
@@ -165,7 +181,7 @@ const Products = () => {
             </div>
             <Pagination
               currentPage={currentPage}
-              totalPages={10}
+              totalPages={totalPages}
               onPageChange={handlePageChange}
             />
           </>

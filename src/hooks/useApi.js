@@ -9,6 +9,8 @@ const useApi = (endpoint) => {
   const [data, setData] = useState([]);
 
   useEffect(() => {
+    setIsLoaded(false);
+
     const fetchData = () => {
       axios
         .get(`${baseURL}/${endpoint}`)
