@@ -3,11 +3,11 @@
 @tailwind utilities;
 
 h1.dashboard {
-  @apply text-2xl font-semibold text-accent;
+  @apply text-2xl font-semibold text-accent mb-2;
 }
 
 .menus-ul li {
-  @apply pr-32 py-1 pl-2 mb-1;
+  @apply pr-36 py-2 pl-3 mb-[2px];
 }
 
 .menus-ul li:hover {
