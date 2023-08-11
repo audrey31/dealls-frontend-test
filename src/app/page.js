@@ -3,6 +3,7 @@
 import Menus from "@/components/Menus";
 import "@/app/globals.css";
 import Products from "@/components/Products";
+import Carts from "@/components/Carts";
 
 import { Provider } from "react-redux";
 import store from "@/redux/store";
@@ -12,7 +13,8 @@ export default function Home() {
     <Provider store={store}>
       <main className="">
         <Menus />
-        <Products />
+        {/* <Products /> */}
+        <Carts />
       </main>
     </Provider>
   );

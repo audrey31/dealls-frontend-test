@@ -35,7 +35,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
   };
 
   return (
-    <div className="join justify-center">
+    <div className="join justify-center mb-6">
       <button
         className="mr-2 btn btn-sm p-0"
         onClick={() => onPageChange(currentPage - 1)}
