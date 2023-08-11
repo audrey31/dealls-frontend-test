@@ -342,7 +342,6 @@ const Products = () => {
             </div>
             <div className="overflow-x-auto mb-3">
               <table className="table overflow-x-auto">
-                {/* head */}
                 <thead>
                   <tr>
                     <th>Product Name</th>
