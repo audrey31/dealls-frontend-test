@@ -157,6 +157,11 @@ const Products = () => {
       );
     });
 
+    const detailsElement = document.querySelector("details");
+    if (detailsElement) {
+      detailsElement.removeAttribute("open");
+    }
+
     dispatch(changeProducts(filteredProducts));
     dispatch(addTotal(filteredProducts.length));
     setChartData(filteredProducts);
@@ -193,7 +198,7 @@ const Products = () => {
             )}
             <div className="search-and-filter flex justify-between">
               <div>
-                <details className="dropdown ">
+                <details className="dropdown">
                   <summary className="m-1 btn btn-secondary px-4 mr-2 md:px-8">
                     <span className="!uppercase">Filter</span>
                   </summary>
