@@ -6,6 +6,7 @@ import { addSkip, addTotal, changeProducts } from "@/redux/products";
 import axios from "axios";
 
 import Pagination from "./Pagination";
+import dummyData from "@/dummy/dummy.json";
 
 const Products = () => {
   const products = useSelector((state) => state.products.products);
@@ -68,6 +69,98 @@ const Products = () => {
     dispatch(addSkip(skipValue));
   }, [currentPage]);
 
+  /**
+   * filter function uses dummy.json, reasong being:
+   * the API didn't provide the function endpoint to filter data
+   * based on what the user picked
+   *
+   * current solution is to get the data when user interacts
+   * with the filter and then filter it manually in the dummy.json
+   */
+
+  const [selectedFilters, setSelectedFilters] = useState({
+    brand: [],
+    minPrice: 0,
+    maxPrice: 0,
+    categories: [],
+  });
+
+  const handleFilterChange = (section, value) => {
+    setSelectedFilters((prevFilters) => ({
+      ...prevFilters,
+      [section]: value,
+    }));
+  };
+
+  const handleCategoriesFilterChecked = (event, filterName) => {
+    const isChecked = event.target.checked;
+    if (isChecked) {
+      handleFilterChange(
+        "categories",
+        selectedFilters.categories.concat(filterName)
+      );
+    } else {
+      handleFilterChange(
+        "categories",
+        selectedFilters.categories.filter((c) => c !== filterName)
+      );
+    }
+  };
+
+  const handleBrandFilterChecked = (event, filterName) => {
+    const isChecked = event.target.checked;
+    if (isChecked) {
+      handleFilterChange("brand", selectedFilters.brand.concat(filterName));
+    } else {
+      handleFilterChange(
+        "brand",
+        selectedFilters.brand.filter((c) => c !== filterName)
+      );
+    }
+  };
+
+  useEffect(() => {
+    console.log(selectedFilters);
+  }, [selectedFilters]);
+
+  // const capitalizeFirstLetter = (str) => {
+  //   return str.charAt(0).toUpperCase() + str.slice(1);
+  // };
+
+  const applyFilters = () => {
+    console.log(dummyData);
+    const filteredProducts = dummyData.products.filter((product) => {
+      const brandFilter =
+        selectedFilters.brand.length === 0 ||
+        selectedFilters.brand.includes(product.brand);
+      const minPriceFilter =
+        selectedFilters.minPrice === 0 ||
+        product.price >= parseInt(selectedFilters.minPrice);
+      const maxPriceFilter =
+        selectedFilters.maxPrice === 0 ||
+        product.price <= parseInt(selectedFilters.maxPrice);
+      const categoryFilter =
+        selectedFilters.categories.length === 0 ||
+        selectedFilters.categories.includes(product.category);
+
+      return (
+        brandFilter &&
+        minPriceFilter &&
+        maxPriceFilter &&
+        categoryFilter &&
+        product.stock
+      );
+    });
+
+    console.log("ini habis difilter", filteredProducts);
+    dispatch(changeProducts(filteredProducts));
+    dispatch(addTotal(filteredProducts.length));
+  };
+
+  useEffect(() => {
+    console.log("cek produk", products);
+  }, [applyFilters]);
+
   return (
     <>
       <div className="pt-8 px-4 md:px-12 flex-1 flex flex-col md:pl-[18rem]">
@@ -92,6 +185,10 @@ const Products = () => {
                             <input
                               type="checkbox"
                               className="checkbox checkbox-primary"
+                              checked={selectedFilters.brand.includes("Apple")}
+                              onChange={(e) => {
+                                handleBrandFilterChecked(e, "Apple");
+                              }}
                             />
                           </label>
                           <label className="label cursor-pointer w-full">
@@ -99,6 +196,12 @@ const Products = () => {
                             <input
                               type="checkbox"
                               className="checkbox checkbox-primary"
+                              checked={selectedFilters.brand.includes(
+                                "Samsung"
+                              )}
+                              onChange={(e) => {
+                                handleBrandFilterChecked(e, "Samsung");
+                              }}
                             />
                           </label>
                           <label className="label cursor-pointer w-full">
@@ -106,6 +209,10 @@ const Products = () => {
                             <input
                               type="checkbox"
                               className="checkbox checkbox-primary"
+                              checked={selectedFilters.brand.includes("Oppo")}
+                              onChange={(e) => {
+                                handleBrandFilterChecked(e, "Oppo");
+                              }}
                             />
                           </label>
                         </li>
@@ -120,7 +227,10 @@ const Products = () => {
                             <input
                               type="number"
                               placeholder="Min Price"
-                              className="input input-bordered w-full max-w-xs "
+                              className="input input-bordered w-full max-w-xs"
+                              onChange={(e) => {
+                                handleFilterChange("minPrice", e.target.value);
+                              }}
                             />
                           </label>
                           <label className="label cursor-pointer w-full">
@@ -129,6 +239,9 @@ const Products = () => {
                               type="number"
                               placeholder="Max Price"
                               className="input input-bordered w-full max-w-xs"
+                              onChange={(e) => {
+                                handleFilterChange("maxPrice", e.target.value);
+                              }}
                             />
                           </label>
                         </li>
@@ -146,13 +259,24 @@ const Products = () => {
                               <input
                                 type="checkbox"
                                 className="checkbox checkbox-primary"
+                                checked={selectedFilters.categories.includes(
+                                  category
+                                )}
+                                onChange={(e) => {
+                                  handleCategoriesFilterChecked(e, category);
+                                }}
                               />
                             </label>
                           ))}
                         </li>
                       </div>
                     </div>
-                    <button className="btn btn-secondary">Apply Filter</button>
+                    <button
+                      className="btn btn-secondary"
+                      onClick={applyFilters}
+                    >
+                      Apply Filter
+                    </button>
                   </ul>
                 </details>
               </div>
