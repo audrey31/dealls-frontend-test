@@ -1,11 +1,14 @@
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
-import { useApi } from "@/hooks/useApi";
+import useApi from "@/hooks/useApi";
 import { addCarts, addSkip, addTotal } from "@/redux/carts";
+
+import { useRouter } from "next/navigation";
 
 import Pagination from "./Pagination";
 
 const Products = () => {
+  const router = useRouter();
   const carts = useSelector((state) => state.carts.carts);
   const limit = useSelector((state) => state.carts.limit);
   const skip = useSelector((state) => state.carts.skip);
@@ -66,7 +69,16 @@ const Products = () => {
                   {carts &&
                     carts.map((cart) => (
                       <tr key={cart.id}>
-                        <td>{cart.userId}</td>
+                        <td>
+                          <button
+                            className="btn btn-secondary"
+                            onClick={() => {
+                              router.push(`carts/${cart.id}`);
+                            }}
+                          >
+                            {cart.id}
+                          </button>
+                        </td>
                         <td>
                           {cart.products.map((product) => (
                             <ul className="list-disc">

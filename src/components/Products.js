@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
-import { useApi, useApiOnce } from "@/hooks/useApi";
+import useApi from "@/hooks/useApi";
 import { addSkip, addTotal, changeProducts } from "@/redux/products";
 
 import axios from "axios";

@@ -6,10 +6,14 @@ h1.dashboard {
   @apply text-2xl font-semibold text-accent mb-2;
 }
 
-.menus-ul li {
-  @apply pr-36 py-2 pl-3 mb-[2px];
+.menus-ul button {
+  @apply text-left w-full pr-32 py-2 pl-3 mb-[2px] rounded-md;
 }
 
-.menus-ul li:hover {
-  @apply bg-secondary rounded-md cursor-pointer;
+.menus-ul button:hover {
+  @apply bg-secondary  cursor-pointer;
+}
+
+.menus-ul button.nav-active {
+  @apply bg-secondary;
 }
