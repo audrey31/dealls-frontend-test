@@ -162,13 +162,6 @@ const Products = () => {
     setChartData(filteredProducts);
   };
 
-  // const chartData = [
-  //   { product: "Koko", Stock: 5 },
-  //   { product: "Mimi", Stock: 3 },
-  //   { product: "Mumu", Stock: 1 },
-  //   { product: "Fuwa", Stock: 2 },
-  // ];
-
   return (
     <>
       <div className="pt-8 px-4 md:px-12 flex-1 flex flex-col md:pl-[18rem]">
@@ -176,7 +169,7 @@ const Products = () => {
 
         {dataCategories.isLoaded && isLoaded && products && isSearchLoading ? (
           <>
-            {chartData.length > 0 ? (
+            {chartData?.length > 0 ? (
               <ResponsiveContainer width="100%" height={300}>
                 <BarChart
                   data={chartData}
