@@ -12,7 +12,7 @@ const CartsDetail = () => {
 
         {isLoaded ? (
           <>
-            <div className="flex gap-3 mb-4">
+            <div className="flex gap-3 mb-4 flex-col sm:flex-row">
               <div className="stats shadow bg-secondary pr-12">
                 <div className="stat">
                   <div className="stat-title">User ID</div>
@@ -35,7 +35,7 @@ const CartsDetail = () => {
               </div>
             </div>
 
-            <div className="flex gap-3 mb-4">
+            <div className="flex gap-3 mb-4 flex-col sm:flex-row">
               <div className="stats shadow bg-secondary pr-12 flex-1">
                 <div className="stat">
                   <div className="stat-title">Total Products</div>
