@@ -57,7 +57,7 @@ const Products = () => {
                 {/* head */}
                 <thead>
                   <tr>
-                    <th>User ID</th>
+                    <th>ID</th>
                     <th>Products</th>
                     <th>Total</th>
                     <th>Discounted Total</th>
