@@ -8,6 +8,17 @@ import axios from "axios";
 import Pagination from "./Pagination";
 import dummyData from "@/dummy/dummy.json";
 
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from "recharts";
+
 const Products = () => {
   const products = useSelector((state) => state.products.products);
   const limit = useSelector((state) => state.products.limit);
@@ -20,9 +31,16 @@ const Products = () => {
 
   const [currentPage, setCurrentPage] = useState(1);
   const [searchInput, setSearchInput] = useState("");
+  const [chartData, setChartData] = useState([]);
 
   const [isSearchLoading, setIsSearchLoading] = useState(true);
   const totalPages = Math.ceil(total / limit);
+
+  useEffect(() => {
+    dispatch(changeProducts(data.products));
+    dispatch(addTotal(data.total));
+    setChartData(data.products);
+  }, [data]);
 
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
@@ -42,16 +60,12 @@ const Products = () => {
       );
       dispatch(changeProducts(response.data.products));
       dispatch(addTotal(response.data.total));
+      setChartData(response.data.products);
       setIsSearchLoading(true);
     } catch (error) {
       console.error("Error fetching search results:", error);
     }
   };
-
-  useEffect(() => {
-    dispatch(changeProducts(data.products));
-    dispatch(addTotal(data.total));
-  }, [data]);
 
   useEffect(() => {
     /**
@@ -119,16 +133,7 @@ const Products = () => {
     }
   };
 
-  useEffect(() => {
-    console.log(selectedFilters);
-  }, [selectedFilters]);
-
-  // const capitalizeFirstLetter = (str) => {
-  //   return str.charAt(0).toUpperCase() + str.slice(1);
-  // };
-
   const applyFilters = () => {
-    console.log(dummyData);
     const filteredProducts = dummyData.products.filter((product) => {
       const brandFilter =
         selectedFilters.brand.length === 0 ||
@@ -152,21 +157,47 @@ const Products = () => {
       );
     });
 
-    console.log("ini habis difilter", filteredProducts);
     dispatch(changeProducts(filteredProducts));
     dispatch(addTotal(filteredProducts.length));
+    setChartData(filteredProducts);
   };
 
-  useEffect(() => {
-    console.log("cek produk", products);
-  }, [applyFilters]);
+  // const chartData = [
+  //   { product: "Koko", Stock: 5 },
+  //   { product: "Mimi", Stock: 3 },
+  //   { product: "Mumu", Stock: 1 },
+  //   { product: "Fuwa", Stock: 2 },
+  // ];
 
   return (
     <>
       <div className="pt-8 px-4 md:px-12 flex-1 flex flex-col md:pl-[18rem]">
         <h1 className="page-title">Products</h1>
+
         {dataCategories.isLoaded && isLoaded && products && isSearchLoading ? (
           <>
+            {chartData.length > 0 ? (
+              <ResponsiveContainer width="100%" height={300}>
+                <BarChart
+                  data={chartData}
+                  margin={{
+                    top: 5,
+                    right: 30,
+                    left: 20,
+                    bottom: 5,
+                  }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="title" />
+                  <YAxis />
+                  <Tooltip />
+                  <Legend />
+                  <Bar dataKey="stock" fill="#8884d8" />
+                </BarChart>
+              </ResponsiveContainer>
+            ) : (
+              ""
+            )}
             <div className="search-and-filter flex justify-between">
               <div>
                 <details className="dropdown ">
