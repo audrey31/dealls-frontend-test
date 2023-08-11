@@ -5,7 +5,7 @@ import { Providers } from "@/redux/provider";
 
 const inter = Inter({ subsets: ["latin"] });
 
-const metadata = {
+export const metadata = {
   title: "Dealls Frontend Test",
   description: "Dashboard Application",
 };
