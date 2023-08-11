@@ -4,6 +4,7 @@ const initialState = {
   products: [],
   limit: 6,
   skip: 0,
+  totalPages: 0,
 };
 
 export const productSlice = createSlice({
@@ -16,16 +17,16 @@ export const productSlice = createSlice({
     changeLimit: (state, action) => {
       state.limit = action.payload;
     },
-    changeSkip: (state, action) => {
-      state.skip = action.payload;
-    },
     addSkip: (state, action) => {
       state.skip = action.payload;
+    },
+    addTotal: (state, action) => {
+      state.totalPages = action.payload;
     },
   },
 });
 
-export const { changeProducts, changeLimit, changeSkip, addSkip } =
+export const { changeProducts, changeLimit, addSkip, addTotal } =
   productSlice.actions;
 
 export default productSlice.reducer;

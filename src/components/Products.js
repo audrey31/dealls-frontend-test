@@ -1,7 +1,9 @@
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
-import useApi from "@/hooks/useApi";
-import { addSkip, changeProducts } from "@/redux/products";
+import { useApi, useApiOnce } from "@/hooks/useApi";
+import { addSkip, addTotal, changeProducts } from "@/redux/products";
+
+import axios from "axios";
 
 import Pagination from "./Pagination";
 
@@ -9,22 +11,46 @@ const Products = () => {
   const products = useSelector((state) => state.products.products);
   const limit = useSelector((state) => state.products.limit);
   const skip = useSelector((state) => state.products.skip);
+  const total = useSelector((state) => state.products.totalPages);
   const dispatch = useDispatch();
 
   const { data, isLoaded } = useApi(`products?limit=${limit}&skip=${skip}`);
   const dataCategories = useApi("products/categories");
 
   const [currentPage, setCurrentPage] = useState(1);
-  const totalPages = Math.ceil(100 / limit);
+  const [searchInput, setSearchInput] = useState("");
+
+  const [isSearchLoading, setIsSearchLoading] = useState(true);
+  const totalPages = Math.ceil(total / limit);
+
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
   };
 
-  useEffect(() => {
-    if (data.products) {
-      dispatch(changeProducts(data.products));
+  const handleSearch = (event) => {
+    if (event.key === "Enter") {
+      fetchSearch();
     }
-  }, [data.products, dispatch]);
+  };
+
+  const fetchSearch = async () => {
+    setIsSearchLoading(false);
+    try {
+      const response = await axios.get(
+        `https://dummyjson.com/products/search?q=${searchInput}&limit=${limit}&skip=${skip}`
+      );
+      dispatch(changeProducts(response.data.products));
+      dispatch(addTotal(response.data.total));
+      setIsSearchLoading(true);
+    } catch (error) {
+      console.error("Error fetching search results:", error);
+    }
+  };
+
+  useEffect(() => {
+    dispatch(changeProducts(data.products));
+    dispatch(addTotal(data.total));
+  }, [data]);
 
   useEffect(() => {
     /**
@@ -46,7 +72,7 @@ const Products = () => {
     <>
       <div className="pt-8 px-4 md:px-12 flex-1 flex flex-col md:pl-[18rem]">
         <h1 className="page-title">Products</h1>
-        {isLoaded && dataCategories.isLoaded ? (
+        {dataCategories.isLoaded && isLoaded && products && isSearchLoading ? (
           <>
             <div className="search-and-filter flex justify-between">
               <div>
@@ -134,9 +160,14 @@ const Products = () => {
                 <input
                   type="text"
                   placeholder="Type here"
-                  className="input input-bordered w-full md:w-auto md:max-w-xs "
+                  className="input input-bordered w-full md:w-auto md:max-w-xs"
+                  onChange={(e) => {
+                    setSearchInput(e.target.value);
+                  }}
+                  onKeyUp={handleSearch}
+                  value={searchInput}
                 />
-                <button class="btn btn-ghost ">
+                <button class="btn btn-ghost" onClick={fetchSearch}>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     class="h-5 w-5"
@@ -167,15 +198,21 @@ const Products = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {products.map((product) => (
-                    <tr key={product.id}>
-                      <td>{product.title}</td>
-                      <td>{product.brand}</td>
-                      <td>${product.price}</td>
-                      <td>{product.stock}</td>
-                      <td className="capitalize">{product.category}</td>
-                    </tr>
-                  ))}
+                  {products.length !== 0 ? (
+                    products.map((product) => (
+                      <tr key={product.id}>
+                        <td>{product.title}</td>
+                        <td>{product.brand}</td>
+                        <td>${product.price}</td>
+                        <td>{product.stock}</td>
+                        <td className="capitalize">{product.category}</td>
+                      </tr>
+                    ))
+                  ) : (
+                    <span className="mt-3 block font-semibold text-center">
+                      No Result
+                    </span>
+                  )}
                 </tbody>
               </table>
             </div>
