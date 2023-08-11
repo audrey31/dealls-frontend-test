@@ -10,7 +10,7 @@ const Menus = () => {
 
   return (
     <>
-      <div className="block md:hidden z-10 fixed right-[8vw] top-[4.2vh]">
+      <div className="block md:hidden z-10 fixed right-[8vw] top-[4vh]">
         <button
           className="btn"
           onClick={() => setIsDashboardOpen(!isDashboardOpen)}
