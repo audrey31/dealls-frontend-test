@@ -16,7 +16,7 @@ body {
 }
 
 .stat-value {
-  @apply text-base md:text-xl;
+  @apply !text-lg md:text-xl;
 }
 
 .stat-title {
