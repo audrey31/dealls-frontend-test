@@ -16,5 +16,13 @@ body {
 }
 
 .stat-value {
-  @apply text-2xl;
+  @apply text-lg md:text-xl;
+}
+
+.stat-title {
+  @apply text-xs md:!text-base;
+}
+
+.stat-desc {
+  @apply text-xs;
 }

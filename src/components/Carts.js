@@ -27,7 +27,6 @@ const Products = () => {
   useEffect(() => {
     dispatch(addCarts(data.carts));
     dispatch(addTotal(data.total));
-    console.log("this is carts", carts);
   }, [data]);
 
   useEffect(() => {
