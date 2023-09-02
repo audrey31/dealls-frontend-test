@@ -44,6 +44,7 @@ const Products = () => {
 
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
+    dispatch(changeProducts([]));
   };
 
   const handleSearch = (event) => {
