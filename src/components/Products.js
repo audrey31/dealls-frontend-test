@@ -32,12 +32,14 @@ const Products = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchInput, setSearchInput] = useState("");
   const [chartData, setChartData] = useState([]);
+  const [initialData, setInitialData] = useState([]);
 
   const [isSearchLoading, setIsSearchLoading] = useState(true);
   const totalPages = Math.ceil(total / limit);
 
   useEffect(() => {
     dispatch(changeProducts(data.products));
+    setInitialData(data.products);
     dispatch(addTotal(data.total));
     setChartData(data.products);
   }, [data]);
@@ -135,6 +137,25 @@ const Products = () => {
   };
 
   const applyFilters = () => {
+    const checkElement = () => {
+      const detailsElement = document.querySelector("details");
+      if (detailsElement) {
+        detailsElement.removeAttribute("open");
+      }
+    };
+
+    console.log("this is selected filters", selectedFilters);
+    if (
+      selectedFilters.brand.length === 0 &&
+      selectedFilters.categories.length === 0 &&
+      selectedFilters.maxPrice === 0 &&
+      selectedFilters.minPrice === 0
+    ) {
+      dispatch(changeProducts(initialData));
+      checkElement();
+      return;
+    }
+
     const filteredProducts = dummyData.products.filter((product) => {
       const brandFilter =
         selectedFilters.brand.length === 0 ||
@@ -158,10 +179,7 @@ const Products = () => {
       );
     });
 
-    const detailsElement = document.querySelector("details");
-    if (detailsElement) {
-      detailsElement.removeAttribute("open");
-    }
+    checkElement();
 
     dispatch(changeProducts(filteredProducts));
     dispatch(addTotal(filteredProducts.length));
